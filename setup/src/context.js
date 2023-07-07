@@ -16,8 +16,44 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [waiting, setWaiting] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [questions, setquestions] = useState([]);
+  const [index, setindex] = useState(0);
+  const [correct, setcorrect] = useState(0);
+  const [error, seterror] = useState(false);
+  const [isModalOPen, setIsModalOpen] = useState(false);
 
-  return <AppContext.Provider value="hello">{children}</AppContext.Provider>;
+  // fetching data function
+  const fetchQuestions = async (url) => {
+    setLoading(true);
+    setWaiting(false);
+    const response = await axios.get(url).catch((err) => console.log(err));
+    if (response) {
+      const data = response.data.results;
+    } else {
+      setWaiting = true;
+    }
+  };
+
+  useEffect(() => {
+    fetchQuestions(tempUrl);
+  }, []);
+
+  return (
+    <AppContext.Provider
+      value={{
+        waiting,
+        loading,
+        questions,
+        index,
+        correct,
+        error,
+        isModalOPen,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };
 // make sure use
 export const useGlobalContext = () => {
