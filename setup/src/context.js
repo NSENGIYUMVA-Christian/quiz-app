@@ -17,10 +17,10 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [waiting, setWaiting] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [questions, setquestions] = useState([]);
-  const [index, setindex] = useState(0);
-  const [correct, setcorrect] = useState(0);
-  const [error, seterror] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [error, setError] = useState(false);
   const [isModalOPen, setIsModalOpen] = useState(false);
 
   // fetching data function
@@ -30,6 +30,15 @@ const AppProvider = ({ children }) => {
     const response = await axios.get(url).catch((err) => console.log(err));
     if (response) {
       const data = response.data.results;
+      if (data.length > 0) {
+        setQuestions(data);
+        setLoading(false);
+        setWaiting(false);
+        setError(false);
+      } else {
+        setWaiting(true);
+        setError(true);
+      }
     } else {
       setWaiting = true;
     }
